@@ -4,7 +4,8 @@ import json
 import csv
 import configparser
 import sys
-
+#sys.path.append('..')
+#import mail.sendEmail as sm
 class MyFile:
     # mainly use to read json, csv, ini, txt file
     def __init__(self,file_name='abc.txt',initial_data=True,encoding='utf-8'):
@@ -13,7 +14,7 @@ class MyFile:
         self.encoding = encoding
         self.datas = None
         if initial_data:
-            self.datas = self.read_file()
+           self.read_file()
     
     def set_type(self,type):
         self.type = type
@@ -34,9 +35,9 @@ class MyFile:
     
     def read_txt(self):
         with open(self.file, 'r', encoding=self.encoding) as f:
-            self.datas = f.readlines()
+            lines = f.readlines()
             f.close()
-        return
+        return lines
     
     def write_txt(self,mylist):
         """
@@ -50,9 +51,9 @@ class MyFile:
     
     def read_json(self):
         with open(self.file, 'r', encoding=self.encoding) as f:
-            self.datas = json.loads(f.read())
+            j = json.loads(f.read())
             f.close()
-        return
+        return j
     
     def write_json(self,d,indent=4):
         """
@@ -64,21 +65,29 @@ class MyFile:
         return
     
     def read_ini(self):
-        with open(self.file, 'w', encoding=self.encoding) as f:
-            self.datas = ConfigParser.ConfigParser()
-            self.datas.readfp(f)
-            #config.get("default","ip")
+        #with open(self.file)as f :#, 'w', encoding=self.encoding) as f:
+        try:
+            config = configparser.ConfigParser()
+            config.read(self.file)#, encoding=self.encoding)
+            #config.readfp(f)
+            #s = config.sections()
+            #o = config.options("mysql")
+            #i = config.items("mysql")
+            #g = config.get("mysql","db_host")
             #config.add_section("book")
             #config.set("book", "title", "the python standard library")
             #config.write(open('1.ini', "w"))
-            f.close()
-        return 
+            #f.close()
+            return config
+        except Exception as e:
+            print(e)
+            return None
     
     def read_csv(self):
         with open(self.file,'rb',encoding=self.encoding) as f:  
-            self.datas = csv.reader(f)
+            r = csv.reader(f)
             f.close()
-        return
+        return r
     
     def write_csv(self,mylist):
         """

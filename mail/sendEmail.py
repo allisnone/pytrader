@@ -35,8 +35,8 @@ def send_mail(sub,content,mail_to_list=None,limit_try=50):
     mail_host='smtp.163.com'
     mail_user='zgx20022002@163.com'
     mail_pass='821853Zgx'  
-    mail_postfix="qq.com"
-    me=mail_user+"<"+mail_user+"@"+mail_postfix+">"
+    #mail_postfix="qq.com"
+    #me=mail_user+"<"+mail_user+"@"+mail_postfix+">"
     msg = MIMEText(content)  
     msg['Subject'] = sub  
     msg['From'] = mail_user 

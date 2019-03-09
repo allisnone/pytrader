@@ -1,31 +1,26 @@
 # -*- coding:utf-8 -*-
 import datetime,time
 #to get the latest trade day
-except_trade_day_list=['2015-05-01','2015-06-22','2015-09-03','2015-10-01','2015-10-02','2015-10-06',\
-                           '2015-10-07','2015-10-08', '2016-04-04','2016-05-02','2016-06-09','2016-06-10',\
-                           '2016-09-15','2016-09-16','2016-10-03','2016-10-04','2016-10-05','2016-10-06',\
-                           '2016-10-07','2017-01-02','2017-01-27','2017-01-30','2017-01-31','2017-02-01','2017-02-02',\
-                           '2017-04-03','2017-04-04','2017-05-01','2017-05-29','2017-05-30','2017-10-02','2017-10-03',\
-                           '2017-10-04','2017-10-05','2017-10-06','2018-01-01','2018-02-15','2018-02-16','2018-02-19',\
-                           '2018-02-20','2018-02-21','2018-04-05','2018-02-06','2018-05-01','2018-06-18','2018-09-24',\
-                           '2018-10-01','2018-10-02','2018-10-03','2018-10-04','2018-10-05','2019-01-01','2019-02-04','2019-02-05',\
-                           '2019-02-06','2019-02-07','2019-02-08','2019-05-05','2019-05-01','2019-06-07',]
-
-except_trade_day_list1 = []
-for date_str in except_trade_day_list:
-    except_trade_day_list1.append(date_str.replace('-', '/'))
+import sys
+sys.path.append('../')
+from comm import fileOperation
 
 def is_trade_date(given_date_str=None):
     """
     :param given_date_str: str type, like '2017-10-01'
     :return: bool type 
     """
+    f = fileOperation.MyFile('../config/dates.json')
+    EXCEPT_DATES = f.datas['except_dates']
+    EXCEPT_DATES_A = []
+    for date_str in EXCEPT_DATES:
+        EXCEPT_DATES_A.append(date_str.replace('-', '/'))
     this_day=datetime.datetime.now()
     date_format='%Y-%m-%d'
     this_str=this_day.strftime(date_format)
     open_str=' 09:15:00'
     if given_date_str!=None:
-        if given_date_str in except_trade_day_list or given_date_str in except_trade_day_list1:
+        if given_date_str in EXCEPT_DATES or given_date_str in EXCEPT_DATES_A:
             return False
         else:
             if '-' in given_date_str:
@@ -34,7 +29,7 @@ def is_trade_date(given_date_str=None):
                 date_format='%Y/%m/%d'
             this_day=datetime.datetime.strptime(given_date_str+open_str,date_format + ' %X')
     else:
-        if this_str in except_trade_day_list or given_date_str in except_trade_day_list1:
+        if this_str in EXCEPT_DATES or given_date_str in EXCEPT_DATES_A:
             return False
         else:
             pass
