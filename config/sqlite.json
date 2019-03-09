@@ -1,0 +1,9 @@
+{
+	"db": "testdb",
+	"interval": 60,
+    "tables": 
+    	{
+    	"table1": "t1",
+    	"table2": "t2",
+    	}           
+}
