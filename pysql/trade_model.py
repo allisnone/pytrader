@@ -151,31 +151,25 @@ class DBSession:
         startdate = dt.datetime.now()
         strategy_list = []
         for data in datas:
+            """
+            if not data[2]:
+                print(111)
+                sg = Strategy(name=data[0], startdate=data[1] , is_valid=data[3],comments=data[4])
+                strategy_list.append(sg)
+            else:
+                pass
+            """
             sg = Strategy(name=data[0], startdate=data[1], lastupdate=data[2] , is_valid=data[3],comments=data[4])
-        sg = Strategy(name='sell_buy_33', startdate=startdate, is_valid=True,comments='三天低点卖出，三天高点买入')
-        sg1 = Strategy(name='fix_exit_3', startdate=startdate, is_valid=True,comments='跌破固定百分百退出')
-        sg2 = Strategy(name='high_star_exit', startdate=startdate, is_valid=True,comments='高位长上影十字星卖出')
-        sg3 = Strategy(name='ma10_exit', startdate=startdate, is_valid=True,comments='ma10买入和卖出')
-        #dbs.session.add(sg)
-        strategy_list = [sg,sg1,sg2,sg3]
+            strategy_list.append(sg)
+        #sg = Strategy(name='sell_buy_33', startdate=startdate, is_valid=True,comments='三天低点卖出，三天高点买入')
+        #self.session.add(sg)
+        #strategy_list = [sg,sg1,sg2,sg3]
         try:
             self.session.add_all(strategy_list)
         except Exception as e:
             print('add_strategy ERROR: ', e)
             return 0
         self.session.commit()
-        """
-        #删除
-        #del_sg = dbs.session.query(Strategy).filter_by(name='fix_exit_3').first()
-        #dbs.session.delete(del_sg)   
-        #dbs.session.commit()
-        #更新
-        startdate1 = dt.datetime.strptime('2019-3-25','%Y-%m-%d')
-        dbs.session.query(Strategy).filter(Strategy.name=='fix_exit_3').update({Strategy.is_valid:False})
-        dbs.session.query(Strategy).filter(Strategy.name=='fix_exit_3').update({Strategy.lastupdate:startdate1})
-        dbs.session.commit()
-        dbs.session.close()
-        """
         return 1
     
     def delete_strategy(self,strategy_name):
@@ -198,10 +192,57 @@ class DBSession:
             print('set_strategy_valid_status ERROR: ', e)
             return 0
         return 1
+    
+    def add_account(self,datas=[]):
+        #add strategy
+        #插入
+        #startdate = dt.datetime.strptime('2019-3-24','%Y-%m-%d')
+        startdate = dt.datetime.now()
+        account_list = []
+        for data in datas:
+            print(data)
+            ac = Accountbase(name=data[0], startdate=data[1], lastupdate=data[2] , is_valid=data[3],comments=data[4])
+            account_list.append(sg)
+        try:
+            self.session.add_all(account_list)
+        except Exception as e:
+            print('add_account ERROR: ', e)
+            return 0
+        self.session.commit()
+        return 1
+    
+    def delete_account(self,uuid):
+        try:
+            del_sg = dbs.session.query(Accountbase).filter_by(uuid=uuid).first()
+            dbs.session.delete(del_sg)   
+            dbs.session.commit()
+        except Exception as e:
+            print('delete_account ERROR: ', e)
+            return 0
+        return 1
+    
+    def update_account(self,uuid,fund):
+        this_datetime = dt.datetime.now()
+        try:
+            self.session.query(Accountbase).filter(Accountbase.uuid==uuid).update({Accountbase.initfund:fund})
+            #self.session.query(Accountbase).filter(Accountbase.name==uuid).update({Accountbase.initfund:this_datetime})
+            self.session.commit()
+        except Exception as e:
+            print('update_account ERROR: ', e)
+            return 0
+        return 1
 
-initial_db(recreate=False)
+initial_db(recreate=True)
 dbs = DBSession(echo=True)
-dbs.add_strategy()
+startdate = dt.datetime.now()
+strategy_datas = [('sell_buy_33',startdate,None,True,'三天低点卖出，三天高点买入'),
+                  ('fix_exit_3',startdate,None,True,'跌破固定百分比退出'),
+                  ('fix_drop_exit',startdate,None,True,'账户最大回撤退出'),
+                  ('high_star_exit',startdate,None,True,'高位长上影十字星卖出'),
+                  ('ma10_exit',startdate,None,True,'ma10买入和卖出'),
+                  ('min_capital',startdate,None,True,'最小市值买入')
+                  ]
+dbs.add_strategy(strategy_datas)
 dbs.set_strategy_valid_status(strategy_name='fix_exit_3',valid=False)
 #dbs.delete_strategy(strategy_name='high_star_exit')
 
