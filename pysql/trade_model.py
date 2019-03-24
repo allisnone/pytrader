@@ -38,7 +38,7 @@ class Accountbase(Base):
     username = Column(String)
     password = Column(String,nullable=True)
     email = Column(String,default='104450966@qq.com')
-    startdate = Column(Date)
+    startdate = Column(Date,default=dt.datetime.now())
     initfund = Column(Float,default=100000)
     trade_fee = Column(Float,default=0.0026)
     accountrade = relationship("Accountrade", back_populates='accountbase',cascade="all, delete, delete-orphan")
@@ -201,8 +201,8 @@ class DBSession:
         account_list = []
         for data in datas:
             print(data)
-            ac = Accountbase(name=data[0], startdate=data[1], lastupdate=data[2] , is_valid=data[3],comments=data[4])
-            account_list.append(sg)
+            ac = Accountbase(uuid=data[0],type=data[1], username=data[2], password=data[3], email=data[4], startdate=data[5],initfund=data[6],trade_fee=data[7])
+            account_list.append(ac)
         try:
             self.session.add_all(account_list)
         except Exception as e:
@@ -245,6 +245,8 @@ strategy_datas = [('sell_buy_33',startdate,None,True,'三天低点卖出，三�
 dbs.add_strategy(strategy_datas)
 dbs.set_strategy_valid_status(strategy_name='fix_exit_3',valid=False)
 #dbs.delete_strategy(strategy_name='high_star_exit')
-
+#Accountbase(uuid='%s',type='%s', username='%s', password='%s', email='%s', startdate='%s',initfund='%s',trade_fee='%s')
+account_datas = [('36007','A',None,None,'104450966@qq.com',startdate,120000,0.0023)]
+dbs.add_account(account_datas)
     
 
