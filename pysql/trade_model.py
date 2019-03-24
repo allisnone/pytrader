@@ -213,8 +213,8 @@ class DBSession:
     
     def delete_account(self,uuid):
         try:
-            del_sg = dbs.session.query(Accountbase).filter_by(uuid=uuid).first()
-            dbs.session.delete(del_sg)   
+            del_ac = dbs.session.query(Accountbase).filter_by(uuid=uuid).first()
+            dbs.session.delete(del_ac)   
             dbs.session.commit()
         except Exception as e:
             print('delete_account ERROR: ', e)
@@ -222,7 +222,7 @@ class DBSession:
         return 1
     
     def update_account(self,uuid,fund):
-        this_datetime = dt.datetime.now()
+        #this_datetime = dt.datetime.now()
         try:
             self.session.query(Accountbase).filter(Accountbase.uuid==uuid).update({Accountbase.initfund:fund})
             #self.session.query(Accountbase).filter(Accountbase.name==uuid).update({Accountbase.initfund:this_datetime})
@@ -232,7 +232,10 @@ class DBSession:
             return 0
         return 1
 
-initial_db(recreate=True)
+try:
+    initial_db(recreate=True)
+except:
+    pass
 dbs = DBSession(echo=True)
 startdate = dt.datetime.now()
 strategy_datas = [('sell_buy_33',startdate,None,True,'三天低点卖出，三天高点买入'),
@@ -248,5 +251,5 @@ dbs.set_strategy_valid_status(strategy_name='fix_exit_3',valid=False)
 #Accountbase(uuid='%s',type='%s', username='%s', password='%s', email='%s', startdate='%s',initfund='%s',trade_fee='%s')
 account_datas = [('36007','A',None,None,'104450966@qq.com',startdate,120000,0.0023)]
 dbs.add_account(account_datas)
-    
+dbs.update_account('36007', 150000)    
 
