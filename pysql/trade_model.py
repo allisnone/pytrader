@@ -49,7 +49,7 @@ class Accountbase(Base):
 class Accountrade(Base):
     __tablename__ = 'accountrade'
     id = Column(Integer, primary_key=True)
-    accid = Column(Integer, ForeignKey('accountbase.uuid'))
+    accid = Column(Integer, ForeignKey('accountbase.uuid'),unique=True)
     max_position = Column(Float,default=0.5)
     max_hold = Column(Integer,default=10)
     realfund = Column(Float)
@@ -61,9 +61,10 @@ class Accountrade(Base):
     #strategy = relationship("Strategy", back_populates='accountrade',foreign_keys=secondary_strategy)
     accountbase = relationship("Accountbase", back_populates='accountrade')#,cascade="all, delete, delete-orphan")
     order = relationship("Order", back_populates='accountrade',cascade="all, delete, delete-orphan")
+    is_valid = Column(Boolean,default=True)
     def __repr__(self):
-       return "<Accountrade(accid='%s', max_position='%s', max_hold='%s', realfund='%s', position='%s', primary_strategy='%s', secondary_strategy='%s', recordtime='%s')>" % (
-                self.accid, self.max_position, self.max_hold,self.realfund,self.position,self.primary_strategy,self.secondary_strategy,self.recordtime)
+       return "<Accountrade(accid='%s', max_position='%s', max_hold='%s', realfund='%s', position='%s', primary_strategy='%s', secondary_strategy='%s', recordtime='%s',is_valid='%s')>" % (
+                self.accid, self.max_position, self.max_hold,self.realfund,self.position,self.primary_strategy,self.secondary_strategy,self.recordtime,self.is_valid)
     
 
 class Ordertype(Base):
@@ -163,13 +164,12 @@ class DBSession:
             strategy_list.append(sg)
         #sg = Strategy(name='sell_buy_33', startdate=startdate, is_valid=True,comments='三天低点卖出，三天高点买入')
         #self.session.add(sg)
-        #strategy_list = [sg,sg1,sg2,sg3]
         try:
             self.session.add_all(strategy_list)
+            self.session.commit()
         except Exception as e:
             print('add_strategy ERROR: ', e)
             return 0
-        self.session.commit()
         return 1
     
     def delete_strategy(self,strategy_name):
@@ -205,10 +205,10 @@ class DBSession:
             account_list.append(ac)
         try:
             self.session.add_all(account_list)
+            self.session.commit()
         except Exception as e:
             print('add_account ERROR: ', e)
             return 0
-        self.session.commit()
         return 1
     
     def delete_account(self,uuid):
@@ -231,25 +231,196 @@ class DBSession:
             print('update_account ERROR: ', e)
             return 0
         return 1
+    
+    def add_accountrade(self,datas=[]):
+        #add strategy
+        #插入
+        #startdate = dt.datetime.strptime('2019-3-24','%Y-%m-%d')
+        account_list = []
+        for data in datas:
+            print(data)
+            ac = Accountrade(accid=data[0],max_position=data[1], max_hold=data[2], realfund=data[3], position=data[4],
+                              primary_strategy=data[5],secondary_strategy=data[6],recordtime=data[7],is_valid=data[8])
+            account_list.append(ac)
+        try:
+            self.session.add_all(account_list)
+            self.session.commit()
+        except Exception as e:
+            print('add_accountrade ERROR: ', e)
+            return 0
+        return 1
+    
+    def delete_accountrade(self,uuid):
+        try:
+            del_ac = dbs.session.query(Accountrade).filter_by(accid=uuid).first()
+            dbs.session.delete(del_ac)   
+            dbs.session.commit()
+        except Exception as e:
+            print('delete_accountrade ERROR: ', e)
+            return 0
+        return 1
+    
+    def update_accountrade(self,uuid,position):
+        #this_datetime = dt.datetime.now()
+        try:
+            self.session.query(Accountrade).filter(Accountrade.accid==uuid).update({Accountrade.position:position})
+            #self.session.query(Accountbase).filter(Accountbase.name==uuid).update({Accountbase.initfund:this_datetime})
+            self.session.commit()
+        except Exception as e:
+            print('update_accountrade ERROR: ', e)
+            return 0
+        return 1
+    
+    def add_ordertype(self,datas=[]):
+        #add strategy
+        #插入
+        #startdate = dt.datetime.strptime('2019-3-24','%Y-%m-%d')
+        account_list = []
+        for data in datas:
+            print(data)
+            #<Ordertype(type='%s', reorder='%s', wait='%s',wave='%s')>
+            ac = Ordertype(accid=data[0],max_position=data[1], max_hold=data[2], realfund=data[3], position=data[4],
+                              primary_strategy=data[5],secondary_strategy=data[6],recordtime=data[7],is_valid=data[8])
+            account_list.append(ac)
+        try:
+            self.session.add_all(account_list)
+            self.session.commit()
+        except Exception as e:
+            print('add_ordertype ERROR: ', e)
+            return 0
+        return 1
+    
+    def delete_ordertype(self,uuid):
+        try:
+            del_ac = dbs.session.query(Ordertype).filter_by(accid=uuid).first()
+            dbs.session.delete(del_ac)   
+            dbs.session.commit()
+        except Exception as e:
+            print('delete_ordertype ERROR: ', e)
+            return 0
+        return 1
+    
+    def update_ordertype(self,uuid,position):
+        #this_datetime = dt.datetime.now()
+        try:
+            self.session.query(Ordertype).filter(Ordertype.accid==uuid).update({Ordertype.position:position})
+            #self.session.query(Accountbase).filter(Accountbase.name==uuid).update({Accountbase.initfund:this_datetime})
+            self.session.commit()
+        except Exception as e:
+            print('update_ordertype ERROR: ', e)
+            return 0
+        return 1
+    
+    def add_order(self,datas=[]):
+        #add strategy
+        #插入
+        #startdate = dt.datetime.strptime('2019-3-24','%Y-%m-%d')
+        account_list = []
+        for data in datas:
+            print(data)
+            #Order(accid='%s', type='%s', direction='%s',code='%s',name='%s',price='%s',share='%s',status='%s',fee='%s',ordertime='%s')
+            ac = Order(accid=data[0],max_position=data[1], max_hold=data[2], realfund=data[3], position=data[4],
+                              primary_strategy=data[5],secondary_strategy=data[6],recordtime=data[7],is_valid=data[8])
+            account_list.append(ac)
+        try:
+            self.session.add_all(account_list)
+            self.session.commit()
+        except Exception as e:
+            print('add_order ERROR: ', e)
+            return 0
+        return 1
+    
+    def delete_order(self,uuid):
+        try:
+            del_ac = dbs.session.query(Order).filter_by(accid=uuid).first()
+            dbs.session.delete(del_ac)   
+            dbs.session.commit()
+        except Exception as e:
+            print('delete_order ERROR: ', e)
+            return 0
+        return 1
+    
+    def update_order(self,uuid,position):
+        #this_datetime = dt.datetime.now()
+        try:
+            self.session.query(Order).filter(Order.accid==uuid).update({Order.position:position})
+            #self.session.query(Accountbase).filter(Accountbase.name==uuid).update({Accountbase.initfund:this_datetime})
+            self.session.commit()
+        except Exception as e:
+            print('update_order ERROR: ', e)
+            return 0
+        return 1
+    
+    def add_potential(self,datas=[]):
+        #add strategy
+        #插入
+        #startdate = dt.datetime.strptime('2019-3-24','%Y-%m-%d')
+        account_list = []
+        for data in datas:
+            print(data)
+            #Potential(code='%s', name='%s', weight='%s', is_valid='%s', max_num='%s',addtime='%s')
+            ac = Potential(accid=data[0],max_position=data[1], max_hold=data[2], realfund=data[3], position=data[4],
+                              primary_strategy=data[5],secondary_strategy=data[6],recordtime=data[7],is_valid=data[8])
+            account_list.append(ac)
+        try:
+            self.session.add_all(account_list)
+            self.session.commit()
+        except Exception as e:
+            print('add_potential ERROR: ', e)
+            return 0
+        return 1
+    
+    def delete_potential(self,uuid):
+        try:
+            del_ac = dbs.session.query(Potential).filter_by(accid=uuid).first()
+            dbs.session.delete(del_ac)   
+            dbs.session.commit()
+        except Exception as e:
+            print('delete_potential ERROR: ', e)
+            return 0
+        return 1
+    
+    def update_potential(self,uuid,position):
+        #this_datetime = dt.datetime.now()
+        try:
+            self.session.query(Potential).filter(Potential.accid==uuid).update({Potential.position:position})
+            #self.session.query(Accountbase).filter(Accountbase.name==uuid).update({Accountbase.initfund:this_datetime})
+            self.session.commit()
+        except Exception as e:
+            print('update_potential ERROR: ', e)
+            return 0
+        return 1
 
 try:
     initial_db(recreate=True)
 except:
     pass
+
 dbs = DBSession(echo=True)
 startdate = dt.datetime.now()
-strategy_datas = [('sell_buy_33',startdate,None,True,'三天低点卖出，三天高点买入'),
-                  ('fix_exit_3',startdate,None,True,'跌破固定百分比退出'),
-                  ('fix_drop_exit',startdate,None,True,'账户最大回撤退出'),
-                  ('high_star_exit',startdate,None,True,'高位长上影十字星卖出'),
-                  ('ma10_exit',startdate,None,True,'ma10买入和卖出'),
-                  ('min_capital',startdate,None,True,'最小市值买入')
-                  ]
-dbs.add_strategy(strategy_datas)
-dbs.set_strategy_valid_status(strategy_name='fix_exit_3',valid=False)
-#dbs.delete_strategy(strategy_name='high_star_exit')
-#Accountbase(uuid='%s',type='%s', username='%s', password='%s', email='%s', startdate='%s',initfund='%s',trade_fee='%s')
-account_datas = [('36007','A',None,None,'104450966@qq.com',startdate,120000,0.0023)]
-dbs.add_account(account_datas)
-dbs.update_account('36007', 150000)    
+def initial_db_tables(dbs):
+    startdate = dt.datetime.now()
+    strategy_datas = [('sell_buy_33',startdate,None,True,'三天低点卖出，三天高点买入'),
+                      ('fix_exit_3',startdate,None,True,'跌破固定百分比退出'),
+                      ('fix_drop_exit',startdate,None,True,'账户最大回撤退出'),
+                      ('high_star_exit',startdate,None,True,'高位长上影十字星卖出'),
+                      ('ma10_exit',startdate,None,True,'ma10买入和卖出'),
+                      ('min_capital',startdate,None,True,'最小市值买入')
+                      ]
+    dbs.add_strategy(strategy_datas)
+    dbs.set_strategy_valid_status(strategy_name='fix_exit_3',valid=False)
+    #dbs.delete_strategy(strategy_name='high_star_exit')
+    #Accountbase(uuid='%s',type='%s', username='%s', password='%s', email='%s', startdate='%s',initfund='%s',trade_fee='%s')
+    account_datas = [('36007','A',None,None,'104450966@qq.com',startdate,120000,0.0023),
+                     ('36008','A',None,None,'104450966@qq.com',startdate,100000,0.0023),]
+    dbs.add_account(account_datas)
+    dbs.update_account('36007', 100000)    
+    dbs.delete_account(uuid='36008')
 
+    #Accountrade(accid='%s', max_position='%s', max_hold='%s', realfund='%s', position='%s', primary_strategy='%s', secondary_strategy='%s', recordtime='%s',is_valid='%s')    
+    accountrade_datas = [('36007',1,5,12000,0.8,1,None,startdate,True),
+                         ('36008',1,5,11100,0.5,2,1,startdate,True)]
+    
+    dbs.add_accountrade(accountrade_datas)
+    dbs.update_accountrade('36007', 0.3)    
+    dbs.delete_accountrade(uuid='36008')
