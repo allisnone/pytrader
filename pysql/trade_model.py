@@ -399,6 +399,7 @@ except:
 dbs = DBSession(echo=True)
 startdate = dt.datetime.now()
 def initial_db_tables(dbs):
+    #初始化表格 Strategy
     startdate = dt.datetime.now()
     strategy_datas = [('sell_buy_33',startdate,None,True,'三天低点卖出，三天高点买入'),
                       ('fix_exit_3',startdate,None,True,'跌破固定百分比退出'),
@@ -410,13 +411,14 @@ def initial_db_tables(dbs):
     dbs.add_strategy(strategy_datas)
     dbs.set_strategy_valid_status(strategy_name='fix_exit_3',valid=False)
     #dbs.delete_strategy(strategy_name='high_star_exit')
+    #初始化表格 Accountbase
     #Accountbase(uuid='%s',type='%s', username='%s', password='%s', email='%s', startdate='%s',initfund='%s',trade_fee='%s')
     account_datas = [('36007','A',None,None,'104450966@qq.com',startdate,120000,0.0023),
                      ('36008','A',None,None,'104450966@qq.com',startdate,100000,0.0023),]
     dbs.add_account(account_datas)
     dbs.update_account('36007', 100000)    
     dbs.delete_account(uuid='36008')
-
+    #初始化表格 Accountrade
     #Accountrade(accid='%s', max_position='%s', max_hold='%s', realfund='%s', position='%s', primary_strategy='%s', secondary_strategy='%s', recordtime='%s',is_valid='%s')    
     accountrade_datas = [('36007',1,5,12000,0.8,1,None,startdate,True),
                          ('36008',1,5,11100,0.5,2,1,startdate,True)]
@@ -424,3 +426,8 @@ def initial_db_tables(dbs):
     dbs.add_accountrade(accountrade_datas)
     dbs.update_accountrade('36007', 0.3)    
     dbs.delete_accountrade(uuid='36008')
+    #初始化表格 Ordertype
+    
+    #初始化表格 Order
+    
+    #初始化表格 Potential
