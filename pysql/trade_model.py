@@ -113,11 +113,13 @@ class Deal(Base):
 
 class Capital(Base):
     __tablename__ = 'capital'
-    time = Column(DateTime)
+    time = Column(DateTime,unique=True)
     #accid = Column(Integer, ForeignKey('accountbase.uuid'),unique=True)
     cash = Column(Float)
     values = Column(Float)
     interval = Column(String,default='D')
+    return "<Capital(time='%s', cash='%s', values='%s','interval='%s')>" % (
+                self.time, self.cash, self.values,self.interval)
     
     
 class Potential(Base):
