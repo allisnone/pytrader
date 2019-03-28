@@ -60,7 +60,7 @@ class Accountrade(Base):
     strategy = relationship("Strategy", back_populates='accountrade',foreign_keys=primary_strategy)#,secondary_strategy])
     #strategy = relationship("Strategy", back_populates='accountrade',foreign_keys=secondary_strategy)
     accountbase = relationship("Accountbase", back_populates='accountrade')#,cascade="all, delete, delete-orphan")
-    orders = relationship("Order", back_populates='accountrade')
+    orders = relationship("Orders", back_populates='accountrade')
     is_valid = Column(Boolean,default=True)
     def __repr__(self):
        return "<Accountrade(accid='%s', max_position='%s', max_hold='%s', realfund='%s', position='%s', primary_strategy='%s', secondary_strategy='%s', recordtime='%s',is_valid='%s')>" % (
@@ -74,12 +74,12 @@ class Ordertype(Base):
     reorder = Column(Boolean,default=False) #下单失败是否重新下单
     wait = Column(Float,default=0) #重新下单等待时间，秒
     wave = Column(Float,default=0.002) #下单价格允许的波动，默认0.2%
-    orders = relationship("Order", back_populates='ordertype')
+    orders = relationship("Orders", back_populates='ordertype')
     def __repr__(self):
        return "<Ordertype(type='%s', reorder='%s', wait='%s',wave='%s')>" % (
                 self.type, self.reorder, self.wait,self.wave)
     
-class Order(Base):
+class Orders(Base):
     __tablename__ = 'orders'
     id = Column(Integer, primary_key=True)
     accid = Column(Integer, ForeignKey('accountrade.accid'))
@@ -89,15 +89,37 @@ class Order(Base):
     name = Column(String)
     price = Column(Float)
     share = Column(Integer,nullable=True,default=100)
+    #下单状态: ordering-下单中，ordered-下单成交， partial-下单部分成交，canceled-已取消的下单
     status = Column(String,default='ordering') #下单状态
     fee = Column(Float) #交易费用
     ordertime = Column(DateTime)
     ordertype = relationship("Ordertype", back_populates='orders')
     accountrade = relationship("Accountrade", back_populates='orders')
+    deal = relationship("Deal", back_populates='orders')
     def __repr__(self):
-       return "<Order(accid='%s', type='%s', direction='%s',code='%s',name='%s',price='%s',share='%s',status='%s',fee='%s',ordertime='%s')>" % (
+       return "<Orders(accid='%s', type='%s', direction='%s',code='%s',name='%s',price='%s',share='%s',status='%s',fee='%s',ordertime='%s')>" % (
                 self.accid, self.type, self.direction,self.code,self.name,self.price,self.share,self.status,self.ordertime)
 
+class Deal(Base):
+    __tablename__ = 'deal'
+    id = Column(Integer, primary_key=True)
+    orderid = Column(Integer, ForeignKey('orders.id'))
+    price = Column(Float)
+    share = Column(Integer,nullable=True,default=100)
+    tradetime = Column(DateTime)
+    orders = relationship("Oders", back_populates='deal')
+    return "<Deal(orderid='%s', price='%s', share='%s','tradetime='%s')>" % (
+                self.orderid, self.price, self.share,self.tradetime)
+
+class Capital(Base):
+    __tablename__ = 'capital'
+    time = Column(DateTime)
+    #accid = Column(Integer, ForeignKey('accountbase.uuid'),unique=True)
+    cash = Column(Float)
+    values = Column(Float)
+    interval = Column(String,default='D')
+    
+    
 class Potential(Base):
     __tablename__ = 'potential'
     id = Column(Integer, primary_key=True)
@@ -318,7 +340,7 @@ class DBSession:
         for data in datas:
             print(data)
             #Order(accid='%s', type='%s', direction='%s',code='%s',name='%s',price='%s',share='%s',status='%s',fee='%s',ordertime='%s')
-            ac = Order(accid=data[0],type=data[1], direction=data[2], code=data[3], name=data[4],
+            ac = Orders(accid=data[0],type=data[1], direction=data[2], code=data[3], name=data[4],
                               price=data[5],share=data[6],status=data[7],fee=data[8],ordertime=data[9])
             account_list.append(ac)
         try:
@@ -331,7 +353,7 @@ class DBSession:
     
     def delete_order(self,order_id):
         try:
-            del_ac = dbs.session.query(Order).filter_by(id=order_id).first()
+            del_ac = dbs.session.query(Orders).filter_by(id=order_id).first()
             dbs.session.delete(del_ac)   
             dbs.session.commit()
         except Exception as e:
@@ -342,7 +364,7 @@ class DBSession:
     def update_order_status(self,order_id,status):
         #this_datetime = dt.datetime.now()
         try:
-            self.session.query(Order).filter(Order.id==order_id).update({Order.status:status})
+            self.session.query(Orders).filter(Orders.id==order_id).update({Orders.status:status})
             #self.session.query(Accountbase).filter(Accountbase.name==uuid).update({Accountbase.initfund:this_datetime})
             self.session.commit()
         except Exception as e:
