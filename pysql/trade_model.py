@@ -13,6 +13,7 @@ from sqlalchemy import *#Column, String, create_engine,relationship
 from sqlalchemy.orm import sessionmaker,relationship,aliased
 from sqlalchemy.ext.declarative import declarative_base
 import datetime as dt
+from logs.mylogger import LOG
 
 # 创建对象的基类:
 Base = declarative_base()
@@ -107,7 +108,7 @@ class Deal(Base):
     price = Column(Float)
     share = Column(Integer,nullable=True,default=100)
     tradetime = Column(DateTime)
-    orders = relationship("Oders", back_populates='deal')
+    orders = relationship("Orders", back_populates='deal')
     def __repr__(self):
         return "<Deal(orderid='%s', price='%s', share='%s',tradetime='%s')>" % (
                                                                                 self.orderid, self.price, self.share,self.tradetime)
@@ -148,7 +149,8 @@ def initial_db(db='pytrader.db',recreate=False):
                 os.remove(backup_db_name)
             os.renames(db, backup_db_name)
         except Exception as e:
-            print('recreate ERROR',e)
+            LOG.logger.error('initial_db: {}'.format(e))
+            #print('recreate ERROR',e)
     engine = create_engine('sqlite:///' + db + '?check_same_thread=False', echo=False)
     #engine = create_engine('mysql+mysqlconnector://root:password@localhost:3306/test')
     #根据基类创建数据库表
@@ -195,7 +197,8 @@ class DBSession:
             self.session.add_all(strategy_list)
             self.session.commit()
         except Exception as e:
-            print('add_strategy ERROR: ', e)
+            LOG.logger.error('add_strategy: {}'.format(e))
+            #print('add_strategy ERROR: ', e)
             return 0
         return 1
     
@@ -205,7 +208,8 @@ class DBSession:
             dbs.session.delete(del_sg)   
             dbs.session.commit()
         except Exception as e:
-            print('delete_strategy ERROR: ', e)
+            #print('delete_strategy ERROR: ', e)
+            LOG.logger.error('delete_strategy: {}'.format(e))
             return 0
         return 1
     
@@ -216,7 +220,8 @@ class DBSession:
             self.session.query(Strategy).filter(Strategy.name==strategy_name).update({Strategy.lastupdate:this_datetime})
             self.session.commit()
         except Exception as e:
-            print('set_strategy_valid_status ERROR: ', e)
+            #print('set_strategy_valid_status ERROR: ', e)
+            LOG.logger.error('set_strategy_valid_status: {}'.format(e))
             return 0
         return 1
     
@@ -227,14 +232,14 @@ class DBSession:
         startdate = dt.datetime.now()
         account_list = []
         for data in datas:
-            print(data)
             ac = Accountbase(uuid=data[0],type=data[1], username=data[2], password=data[3], email=data[4], startdate=data[5],initfund=data[6],trade_fee=data[7])
             account_list.append(ac)
         try:
             self.session.add_all(account_list)
             self.session.commit()
         except Exception as e:
-            print('add_account ERROR: ', e)
+            #print('add_account ERROR: ', e)
+            LOG.logger.error('add_account: {}'.format(e))
             return 0
         return 1
     
@@ -244,7 +249,7 @@ class DBSession:
             dbs.session.delete(del_ac)   
             dbs.session.commit()
         except Exception as e:
-            print('delete_account ERROR: ', e)
+            LOG.logger.error('delete_account: {}'.format(e))
             return 0
         return 1
     
@@ -255,7 +260,7 @@ class DBSession:
             #self.session.query(Accountbase).filter(Accountbase.name==uuid).update({Accountbase.initfund:this_datetime})
             self.session.commit()
         except Exception as e:
-            print('update_account ERROR: ', e)
+            LOG.logger.error('update_account: {}'.format(e))
             return 0
         return 1
     
@@ -273,7 +278,7 @@ class DBSession:
             self.session.add_all(account_list)
             self.session.commit()
         except Exception as e:
-            print('add_accountrade ERROR: ', e)
+            LOG.logger.error('add_accountrade: {}'.format(e))
             return 0
         return 1
     
@@ -283,7 +288,7 @@ class DBSession:
             dbs.session.delete(del_ac)   
             dbs.session.commit()
         except Exception as e:
-            print('delete_accountrade ERROR: ', e)
+            LOG.logger.error('delete_accountrade: {}'.format(e))
             return 0
         return 1
     
@@ -294,7 +299,7 @@ class DBSession:
             #self.session.query(Accountbase).filter(Accountbase.name==uuid).update({Accountbase.initfund:this_datetime})
             self.session.commit()
         except Exception as e:
-            print('update_accountrade ERROR: ', e)
+            LOG.logger.error('update_accountrade: {}'.format(e))
             return 0
         return 1
     
@@ -312,7 +317,7 @@ class DBSession:
             self.session.add_all(account_list)
             self.session.commit()
         except Exception as e:
-            print('add_ordertype ERROR: ', e)
+            LOG.logger.error('add_ordertype: {}'.format(e))
             return 0
         return 1
     
@@ -322,7 +327,7 @@ class DBSession:
             dbs.session.delete(del_ac)   
             dbs.session.commit()
         except Exception as e:
-            print('delete_ordertype ERROR: ', e)
+            LOG.logger.error('delete_ordertype: {}'.format(e))
             return 0
         return 1
     
@@ -333,7 +338,7 @@ class DBSession:
             #self.session.query(Accountbase).filter(Accountbase.name==uuid).update({Accountbase.initfund:this_datetime})
             self.session.commit()
         except Exception as e:
-            print('update_ordertype ERROR: ', e)
+            LOG.logger.error('update_ordertype: {}'.format(e))
             return 0
         return 1
     
@@ -352,7 +357,7 @@ class DBSession:
             self.session.add_all(account_list)
             self.session.commit()
         except Exception as e:
-            print('add_order ERROR: ', e)
+            LOG.logger.error('add_order: {}'.format(e))
             return 0
         return 1
     
@@ -362,7 +367,7 @@ class DBSession:
             dbs.session.delete(del_ac)   
             dbs.session.commit()
         except Exception as e:
-            print('delete_order ERROR: ', e)
+            LOG.logger.error('delete_order: {}'.format(e))
             return 0
         return 1
     
@@ -373,7 +378,7 @@ class DBSession:
             #self.session.query(Accountbase).filter(Accountbase.name==uuid).update({Accountbase.initfund:this_datetime})
             self.session.commit()
         except Exception as e:
-            print('update_order_status ERROR: ', e)
+            LOG.logger.error('update_order_status: {}'.format(e))
             return 0
         return 1
     
@@ -392,7 +397,7 @@ class DBSession:
             self.session.add_all(account_list)
             self.session.commit()
         except Exception as e:
-            print('add_potential ERROR: ', e)
+            LOG.logger.error('add_potential: {}'.format(e))
             return 0
         return 1
     
@@ -402,7 +407,7 @@ class DBSession:
             dbs.session.delete(del_ac)   
             dbs.session.commit()
         except Exception as e:
-            print('delete_potential ERROR: ', e)
+            LOG.logger.error('delete_potential: {}'.format(e))
             return 0
         return 1
     
@@ -413,7 +418,7 @@ class DBSession:
             #self.session.query(Accountbase).filter(Accountbase.name==uuid).update({Accountbase.initfund:this_datetime})
             self.session.commit()
         except Exception as e:
-            print('update_potential ERROR: ', e)
+            LOG.logger.error('update_potential: {}'.format(e))
             return 0
         return 1
 
@@ -491,9 +496,10 @@ except:
 
 initial_db(recreate=True)
 dbs = DBSession(echo=True)
+initial_db_tables(dbs)
 startdate = dt.datetime.now()
 import sys
 #sys.path.append("../logs")
-from logs.mylogger import LOG
-LOG.logger.info('分众传媒')
+
+#LOG.logger.info('分众传媒')
 #initial_db_tables(dbs)
