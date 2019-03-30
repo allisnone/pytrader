@@ -125,6 +125,27 @@ class Capital(Base):
         return "<Capital(time='%s', cash='%s', values='%s','interval='%s')>" % (
                 self.time, self.cash, self.values,self.interval)
     
+    def get_max_drop(self):
+        max_drop = -0.12
+        return  max_drop
+    
+    def update_position(self):
+        #本金连续下跌时应快速减仓
+        max_position = 0.8
+        drop_unit = -0.05
+        pos_unit = drop_unit * 2
+        max_drop = self.get_max_drop()
+        pos = max_position
+        n =9 
+        while n>0:
+            if max_drop < n * drop_unit:
+                break
+            else:
+                n = n - 1
+        if n >0:
+            pos = (1 + n * pos_unit)**(n+1)
+        return min(pos,max_position)
+        
     
 class Potential(Base):
     __tablename__ = 'potential'
@@ -135,9 +156,9 @@ class Potential(Base):
     is_valid = Column(Boolean,default=True)
     max_num = Column(Integer,default=100)
     addtime = Column(DateTime)
-    lasttime = Column(DateTime,onupdate=func.now)
+    lasttime = Column(DateTime)#,onupdate=func.now)
     def __repr__(self):
-       return "<Potential(code='%s', name='%s', weight='%s', is_valid='%s', max_num='%s',addtime='%s')>" % (
+        return "<Potential(code='%s', name='%s', weight='%s', is_valid='%s', max_num='%s',addtime='%s')>" % (
                 self.code, self.name, self.weight, self.is_valid,self.max_num,self.addtime)
 
 def initial_db(db='pytrader.db',recreate=False):
