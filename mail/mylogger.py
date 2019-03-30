@@ -42,7 +42,7 @@ class Logger(object):
         
     def send_mail(self,subject = 'Just for logger test',handle=None):
         self.logger.info('Send mail message to {}'.format(self.tomails))
-        self.set_mail_handle(subject,handle=None)
+        self.set_mail_handle(subject,handle)
         self.logger.addHandler(self.m_handler)
         return
     
