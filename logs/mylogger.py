@@ -50,8 +50,10 @@ class Logger(object):
         self.logger.removeHandler(self.m_handler)
         self.logger.info('Cancel send mail message to {}'.format(self.tomails))
         return
-"""    
-LOG = Logger(logfile='all.log',errorfile='error.log',logname='mylogger',level=logging.DEBUG,tolist=['104450966@qq.com'])
+  
+LOG = Logger(logfile='../logs/pytrader.log',errorfile='../logs/error.log',logname='mylogger',level=logging.DEBUG)
+""" 
+LOG = Logger(logfile='all.log',errorfile='error.log',logname='mylogger',level=logging.DEBUG)
 LOG.logger.debug('debug message')
 LOG.logger.info('info message')
 LOG.logger.warning('warning message')
