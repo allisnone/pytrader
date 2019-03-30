@@ -12,9 +12,9 @@ class Logger(object):
     def __init__(self,logfile='all.log',errorfile='error.log',logname='mylogger',level=logging.DEBUG,tolist=['104450966@qq.com']):
         self.logger = logging.getLogger(logname)
         self.logger.setLevel(level)
-        rf_handler = logging.handlers.TimedRotatingFileHandler(logfile, when='midnight', interval=1, backupCount=7, atTime=datetime.time(0, 0, 0, 0))
+        rf_handler = logging.handlers.TimedRotatingFileHandler(logfile, when='midnight', interval=1, backupCount=7, atTime=datetime.time(0, 0, 0, 0),encoding="utf-8")
         rf_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
-        f_handler = logging.FileHandler(errorfile)
+        f_handler = logging.FileHandler(errorfile,encoding="utf-8")
         f_handler.setLevel(logging.ERROR)
         f_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(filename)s[:%(lineno)d] - %(message)s"))
         self.m_handler = None

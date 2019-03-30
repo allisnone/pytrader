@@ -495,4 +495,5 @@ startdate = dt.datetime.now()
 import sys
 #sys.path.append("../logs")
 from logs.mylogger import LOG
+LOG.logger.info('分众传媒')
 #initial_db_tables(dbs)
