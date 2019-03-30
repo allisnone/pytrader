@@ -108,17 +108,20 @@ class Deal(Base):
     share = Column(Integer,nullable=True,default=100)
     tradetime = Column(DateTime)
     orders = relationship("Oders", back_populates='deal')
-    return "<Deal(orderid='%s', price='%s', share='%s','tradetime='%s')>" % (
-                self.orderid, self.price, self.share,self.tradetime)
+    def __repr__(self):
+        return "<Deal(orderid='%s', price='%s', share='%s',tradetime='%s')>" % (
+                                                                                self.orderid, self.price, self.share,self.tradetime)
 
 class Capital(Base):
     __tablename__ = 'capital'
-    time = Column(DateTime,unique=True)
+    id = Column(Integer, primary_key=True)
+    time = Column(DateTime)
     #accid = Column(Integer, ForeignKey('accountbase.uuid'),unique=True)
     cash = Column(Float)
     values = Column(Float)
     interval = Column(String,default='D')
-    return "<Capital(time='%s', cash='%s', values='%s','interval='%s')>" % (
+    def __repr__(self):
+        return "<Capital(time='%s', cash='%s', values='%s','interval='%s')>" % (
                 self.time, self.cash, self.values,self.interval)
     
     
@@ -414,15 +417,7 @@ class DBSession:
             return 0
         return 1
 
-try:
-    #initial_db(recreate=False)
-    pass
-except:
-    pass
 
-initial_db(recreate=True)
-dbs = DBSession(echo=True)
-startdate = dt.datetime.now()
 def initial_db_tables(dbs):
     #初始化表格 Strategy
     startdate = dt.datetime.now()
@@ -487,6 +482,17 @@ def initial_db_tables(dbs):
     dbs.commit()
     dbs.close()
     
-initial_db_tables(dbs)
+#initial_db_tables(dbs)
+try:
+    #initial_db(recreate=False)
+    pass
+except:
+    pass
 
+initial_db(recreate=True)
+dbs = DBSession(echo=True)
+startdate = dt.datetime.now()
+import sys
+#sys.path.append("../logs")
+from logs.mylogger import LOG
 #initial_db_tables(dbs)

@@ -5,7 +5,7 @@ import logging
 import logging.handlers
 import datetime
 import base64
-from enc import aes_cbc_decrypt
+from .enc import aes_cbc_decrypt
 
 class Logger(object):
     def __init__(self,logfile='all.log',errorfile='error.log',logname='mylogger',level=logging.DEBUG,tolist=['104450966@qq.com']):
@@ -51,7 +51,7 @@ class Logger(object):
         self.logger.info('Cancel send mail message to {}'.format(self.tomails))
         return
   
-LOG = Logger(logfile='../logs/pytrader.log',errorfile='../logs/error.log',logname='mylogger',level=logging.DEBUG)
+LOG = Logger(logfile='pytrader.log',errorfile='error.log',logname='mylogger',level=logging.DEBUG)
 """ 
 LOG = Logger(logfile='all.log',errorfile='error.log',logname='mylogger',level=logging.DEBUG)
 LOG.logger.debug('debug message')
