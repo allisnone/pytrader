@@ -60,7 +60,7 @@ class MyFile:
         :parama d, dict type
         """
         with open(self.file, 'w', encoding=self.encoding) as f:
-            f.write(json.dumps(a, indent))
+            f.write(json.dumps(d, indent))
             f.close()
         return
     
@@ -97,6 +97,6 @@ class MyFile:
         with open(self.file,'wb',encoding=self.encoding) as f:      
             myWriter=csv.writer(f)  
             #myWriter.writerow([7,8,9])     
-            myWriter.writerows(myList)
+            myWriter.writerows(mylist)
             f.close()
         return
