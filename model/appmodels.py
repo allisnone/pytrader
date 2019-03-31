@@ -14,9 +14,15 @@ from sqlalchemy.orm import sessionmaker,relationship,aliased
 from sqlalchemy.ext.declarative import declarative_base
 import datetime as dt
 from comm.logger import LOG
-from appflask import db
+#from appflask import db
+#Base = db.Model
+#Column = db.Column
+#Integer = db.Integer
 
-class Strategy(db.Model):
+# 创建对象的基类:
+Base = declarative_base()
+
+class Strategy(Base):
     __tablename__ = 'strategy'
     id = Column(Integer, primary_key=True)
     name = Column(String,unique=True)
@@ -29,7 +35,7 @@ class Strategy(db.Model):
         return "<Strategy(name='%s', startdate='%s', lastupdate='%s', is_valid='%s', comments='%s')>" % (
                             self.name, self.startdate,self.lastupdate, self.is_valid,self.comments)
        
-class Accountbase(db.Model):
+class Accountbase(Base):
     __tablename__ = 'accountbase'
     id = Column(Integer, primary_key=True)
     uuid = Column(String,nullable=True,unique=True)
@@ -45,7 +51,7 @@ class Accountbase(db.Model):
         return "<Accountbase(uuid='%s',type='%s', username='%s', password='%s', email='%s', startdate='%s',initfund='%s',trade_fee='%s')>" % (
                 self.uuid,self.type, self.username, self.password,self.email,self.startdate,self.initfund,self.trade_fee)
 
-class Accountrade(db.Model):
+class Accountrade(Base):
     __tablename__ = 'accountrade'
     id = Column(Integer, primary_key=True)
     accid = Column(Integer, ForeignKey('accountbase.uuid'),unique=True)
@@ -66,7 +72,7 @@ class Accountrade(db.Model):
                 self.accid, self.max_position, self.max_hold,self.realfund,self.position,self.primary_strategy,self.secondary_strategy,self.recordtime,self.is_valid)
     
 
-class Ordertype(db.Model):
+class Ordertype(Base):
     __tablename__ = 'ordertype'
     id = Column(Integer, primary_key=True)
     type = Column(String,unique=True)
@@ -78,7 +84,7 @@ class Ordertype(db.Model):
         return "<Ordertype(type='%s', reorder='%s', wait='%s',wave='%s')>" % (
                 self.type, self.reorder, self.wait,self.wave)
     
-class Orders(db.Model):
+class Orders(Base):
     __tablename__ = 'orders'
     id = Column(Integer, primary_key=True)
     accid = Column(Integer, ForeignKey('accountrade.accid'))
@@ -99,7 +105,7 @@ class Orders(db.Model):
         return "<Orders(accid='%s', type='%s', direction='%s',code='%s',name='%s',price='%s',share='%s',status='%s',fee='%s',ordertime='%s')>" % (
                 self.accid, self.type, self.direction,self.code,self.name,self.price,self.share,self.status,self.ordertime)
 
-class Deal(db.Model):
+class Deal(Base):
     __tablename__ = 'deal'
     id = Column(Integer, primary_key=True)
     orderid = Column(Integer, ForeignKey('orders.id'))
@@ -111,7 +117,7 @@ class Deal(db.Model):
         return "<Deal(orderid='%s', price='%s', share='%s',tradetime='%s')>" % (
                                                                                 self.orderid, self.price, self.share,self.tradetime)
 
-class Capital(db.Model):
+class Capital(Base):
     __tablename__ = 'capital'
     id = Column(Integer, primary_key=True)
     time = Column(DateTime)
@@ -152,7 +158,7 @@ class Capital(db.Model):
             max_drop = max_drop - 0.01
         
     
-class Potential(db.Model):
+class Potential(Base):
     __tablename__ = 'potential'
     id = Column(Integer, primary_key=True)
     code = Column(String,nullable=True)
