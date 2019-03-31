@@ -6,7 +6,6 @@ import logging
 import logging.handlers
 import datetime
 import base64
-import os
 from comm.enc import aes_cbc_decrypt
 
 class Logger(object):
@@ -52,11 +51,12 @@ class Logger(object):
         self.logger.removeHandler(self.m_handler)
         self.logger.info('Cancel send mail message to {}'.format(self.tomails))
         return
-
+""" 
+import os
 #log_path = os.path.dirname(os.path.abspath(__file__))  
 #log_path = log_path.replace('comm','logs')
 #LOG = Logger(logfile=os.path.join(log_path,'pytrader.log'),errorfile=os.path.join(log_path,'error.log'),logname='mylogger',level=logging.DEBUG)
-""" 
+
 LOG = Logger(logfile='all.log',errorfile='error.log',logname='mylogger',level=logging.DEBUG)
 LOG.logger.debug('debug message')
 LOG.logger.info('info message')
