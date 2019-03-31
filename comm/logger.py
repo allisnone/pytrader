@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#__Author__= allisnone #2019-02-16
+#__Author__= allisnone #2019-03-26
 #https://www.cnblogs.com/yyds/p/6901864.html
 """日志记录和日志触发email"""
 import logging
