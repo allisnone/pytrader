@@ -19,7 +19,9 @@ from comm.logger import LOG
 #from sqlalchemy import *#Column, String, create_engine,relationship
 from sqlalchemy.orm import sessionmaker
 #from config import HOME_PATH
-from trademodel.appmodels import Strategy,Accountbase,Accountrade,Ordertype,Orders,Potential,Deal,Capital,LOG,Base,dt,create_engine
+from trademodel.appmodels import Strategy,Accountbase,Accountrade,Ordertype,Orders,Potential,Deal,Capital,dt,create_engine,Base
+from comm.logger import LOG
+#from trademodel.model import Base
 import os
 #from appmodel import *
 # 创建对象的基类:
@@ -80,9 +82,9 @@ class DBSession:
     
     def delete_strategy(self,strategy_name):
         try:
-            del_sg = dbs.session.query(Strategy).filter_by(name=strategy_name).first()
-            dbs.session.delete(del_sg)   
-            dbs.session.commit()
+            del_sg = self.session.query(Strategy).filter_by(name=strategy_name).first()
+            self.session.delete(del_sg)   
+            self.session.commit()
         except Exception as e:
             #print('delete_strategy ERROR: ', e)
             LOG.logger.error('delete_strategy: {}'.format(e))
@@ -121,9 +123,9 @@ class DBSession:
     
     def delete_account(self,uuid):
         try:
-            del_ac = dbs.session.query(Accountbase).filter_by(uuid=uuid).first()
-            dbs.session.delete(del_ac)   
-            dbs.session.commit()
+            del_ac = self.session.query(Accountbase).filter_by(uuid=uuid).first()
+            self.session.delete(del_ac)   
+            self.session.commit()
         except Exception as e:
             LOG.logger.error('delete_account: {}'.format(e))
             return 0
@@ -160,9 +162,9 @@ class DBSession:
     
     def delete_accountrade(self,uuid):
         try:
-            del_ac = dbs.session.query(Accountrade).filter_by(accid=uuid).first()
-            dbs.session.delete(del_ac)   
-            dbs.session.commit()
+            del_ac = self.session.query(Accountrade).filter_by(accid=uuid).first()
+            self.session.delete(del_ac)   
+            self.session.commit()
         except Exception as e:
             LOG.logger.error('delete_accountrade: {}'.format(e))
             return 0
@@ -199,9 +201,9 @@ class DBSession:
     
     def delete_ordertype(self,type):
         try:
-            del_ac = dbs.session.query(Ordertype).filter_by(type=type).first()
-            dbs.session.delete(del_ac)   
-            dbs.session.commit()
+            del_ac = self.session.query(Ordertype).filter_by(type=type).first()
+            self.session.delete(del_ac)   
+            self.session.commit()
         except Exception as e:
             LOG.logger.error('delete_ordertype: {}'.format(e))
             return 0
@@ -239,9 +241,9 @@ class DBSession:
     
     def delete_order(self,order_id):
         try:
-            del_ac = dbs.session.query(Orders).filter_by(id=order_id).first()
-            dbs.session.delete(del_ac)   
-            dbs.session.commit()
+            del_ac = self.session.query(Orders).filter_by(id=order_id).first()
+            self.session.delete(del_ac)   
+            self.session.commit()
         except Exception as e:
             LOG.logger.error('delete_order: {}'.format(e))
             return 0
@@ -279,9 +281,9 @@ class DBSession:
     
     def delete_potential(self,code):
         try:
-            del_ac = dbs.session.query(Potential).filter_by(code=code).first()
-            dbs.session.delete(del_ac)   
-            dbs.session.commit()
+            del_ac = self.session.query(Potential).filter_by(code=code).first()
+            self.session.delete(del_ac)   
+            self.session.commit()
         except Exception as e:
             LOG.logger.error('delete_potential: {}'.format(e))
             return 0
@@ -379,7 +381,7 @@ def initial_db_tables(dbs):
     dbs.delete_potential('300012')
     dbs.commit()
     dbs.close()
-    
+"""    
 #initial_db_tables(dbs)
 try:
     #initial_db(recreate=False)
@@ -390,6 +392,7 @@ except:
 initial_db(recreate=True)
 dbs = DBSession(echo=True)
 initial_db_tables(dbs)
+"""
 #startdate = dt.datetime.now()
 #import sys
 #sys.path.append("../logs")

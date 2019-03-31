@@ -13,7 +13,6 @@ from sqlalchemy import *#Column, String, create_engine,relationship
 from sqlalchemy.orm import relationship
 
 import datetime as dt
-from comm.logger import LOG
 from appweb.appflask import dbs
 Base = dbs.Model
 #Column = db.Column
