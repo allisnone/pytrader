@@ -14,13 +14,13 @@ from sqlalchemy.orm import sessionmaker,relationship,aliased
 from sqlalchemy.ext.declarative import declarative_base
 import datetime as dt
 from comm.logger import LOG
-#from appflask import db
-#Base = db.Model
+from appflask import db,app
+Base = db.Model
 #Column = db.Column
 #Integer = db.Integer
 
 # 创建对象的基类:
-Base = declarative_base()
+#Base = declarative_base()
 
 class Strategy(Base):
     __tablename__ = 'strategy'
