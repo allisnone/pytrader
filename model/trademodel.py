@@ -28,7 +28,7 @@ class Strategy(Base):
     comments = Column(Text)
     accountrade = relationship("Accountrade", back_populates='strategy')
     def __repr__(self):
-       return "<Strategy(name='%s', startdate='%s', lastupdate='%s', is_valid='%s', comments='%s')>" % (
+        return "<Strategy(name='%s', startdate='%s', lastupdate='%s', is_valid='%s', comments='%s')>" % (
                             self.name, self.startdate,self.lastupdate, self.is_valid,self.comments)
        
 class Accountbase(Base):
@@ -44,7 +44,7 @@ class Accountbase(Base):
     trade_fee = Column(Float,default=0.0026)
     accountrade = relationship("Accountrade", back_populates='accountbase',cascade="all, delete, delete-orphan")
     def __repr__(self):
-       return "<Accountbase(uuid='%s',type='%s', username='%s', password='%s', email='%s', startdate='%s',initfund='%s',trade_fee='%s')>" % (
+        return "<Accountbase(uuid='%s',type='%s', username='%s', password='%s', email='%s', startdate='%s',initfund='%s',trade_fee='%s')>" % (
                 self.uuid,self.type, self.username, self.password,self.email,self.startdate,self.initfund,self.trade_fee)
 
 class Accountrade(Base):
@@ -64,7 +64,7 @@ class Accountrade(Base):
     orders = relationship("Orders", back_populates='accountrade')
     is_valid = Column(Boolean,default=True)
     def __repr__(self):
-       return "<Accountrade(accid='%s', max_position='%s', max_hold='%s', realfund='%s', position='%s', primary_strategy='%s', secondary_strategy='%s', recordtime='%s',is_valid='%s')>" % (
+        return "<Accountrade(accid='%s', max_position='%s', max_hold='%s', realfund='%s', position='%s', primary_strategy='%s', secondary_strategy='%s', recordtime='%s',is_valid='%s')>" % (
                 self.accid, self.max_position, self.max_hold,self.realfund,self.position,self.primary_strategy,self.secondary_strategy,self.recordtime,self.is_valid)
     
 
@@ -77,7 +77,7 @@ class Ordertype(Base):
     wave = Column(Float,default=0.002) #下单价格允许的波动，默认0.2%
     orders = relationship("Orders", back_populates='ordertype')
     def __repr__(self):
-       return "<Ordertype(type='%s', reorder='%s', wait='%s',wave='%s')>" % (
+        return "<Ordertype(type='%s', reorder='%s', wait='%s',wave='%s')>" % (
                 self.type, self.reorder, self.wait,self.wave)
     
 class Orders(Base):
@@ -148,7 +148,7 @@ class Capital(Base):
     
     def test_position(self):
         max_drop=-0.02
-        for  i in range(40):
+        for i in range(40):
             pos = self.dynamic_position(max_drop)
             print( 'max_drop= {0}, pos={1}'.format(max_drop, pos))
             max_drop = max_drop - 0.01
@@ -206,7 +206,7 @@ class DBSession:
         #add strategy
         #插入
         #startdate = dt.datetime.strptime('2019-3-24','%Y-%m-%d')
-        startdate = dt.datetime.now()
+        #startdate = dt.datetime.now()
         strategy_list = []
         for data in datas:
             """
@@ -257,7 +257,7 @@ class DBSession:
         #add strategy
         #插入
         #startdate = dt.datetime.strptime('2019-3-24','%Y-%m-%d')
-        startdate = dt.datetime.now()
+        #startdate = dt.datetime.now()
         account_list = []
         for data in datas:
             ac = Accountbase(uuid=data[0],type=data[1], username=data[2], password=data[3], email=data[4], startdate=data[5],initfund=data[6],trade_fee=data[7])
@@ -526,7 +526,7 @@ initial_db(recreate=True)
 dbs = DBSession(echo=True)
 initial_db_tables(dbs)
 startdate = dt.datetime.now()
-import sys
+#import sys
 #sys.path.append("../logs")
 
 #LOG.logger.info('分众传媒')
