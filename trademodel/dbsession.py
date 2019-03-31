@@ -21,15 +21,16 @@ from sqlalchemy.orm import sessionmaker
 #from config import HOME_PATH
 from trademodel.appmodels import Strategy,Accountbase,Accountrade,Ordertype,Orders,Potential,Deal,Capital,dt,create_engine
 from config.config import LOG,DB_PATH
-#from trademodel.model import Base
-import os
+from trademodel.appmodels import Base
+#import os
 #from appmodel import *
 # 创建对象的基类:
-from sqlalchemy.ext.declarative import declarative_base
-Base = declarative_base()
+#from sqlalchemy.ext.declarative import declarative_base
+#Base = declarative_base()
 
 class DBSession:
     def __init__(self,db=DB_PATH,echo=False):
+        LOG.logger.info('db path: {}'.format(db))
         self.engine = create_engine('sqlite:///' + db + '?check_same_thread=False', echo=echo)
         # 创建DBSession类型:
         Session = sessionmaker(bind=self.engine)

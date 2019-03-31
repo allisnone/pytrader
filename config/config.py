@@ -10,5 +10,5 @@ with open(config_file, 'r', encoding='utf-8') as f:
             f.close()
             
 LOG_PATH = os.path.join(HOME_PATH,'logs')
-DB_PATH = os.path.join(HOME_PATH,'logs','pytrader.db')
+DB_PATH = os.path.join(HOME_PATH,'trademodel','pytrader.db')
 LOG = Logger(logfile=os.path.join(LOG_PATH,'pytrader.log'),errorfile=os.path.join(LOG_PATH,'error.log'),logname='mylogger',level=logging.DEBUG)
