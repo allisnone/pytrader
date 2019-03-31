@@ -10,8 +10,8 @@
 #data type
 #https://gitee.com/rambo_online/codes/he6xsd9rgyj4ut1l2vw7n73
 from sqlalchemy import *#Column, String, create_engine,relationship
-from sqlalchemy.orm import sessionmaker,relationship,aliased
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
+
 import datetime as dt
 from comm.logger import LOG
 from appweb.appflask import dbs
@@ -20,6 +20,7 @@ Base = dbs.Model
 #Integer = db.Integer
 
 # 创建对象的基类:
+#from sqlalchemy.ext.declarative import declarative_base
 #Base = declarative_base()
 
 class Strategy(Base):

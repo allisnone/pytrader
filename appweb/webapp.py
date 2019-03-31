@@ -5,7 +5,7 @@ import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from trademodel.appmodels import *
-from appflask import apps   
+from appweb.appflask import apps   
 @apps.route('/strategy')
 def strategies():
     users = Strategy.query.all()
