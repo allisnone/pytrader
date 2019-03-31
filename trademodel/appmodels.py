@@ -14,8 +14,8 @@ from sqlalchemy.orm import sessionmaker,relationship,aliased
 from sqlalchemy.ext.declarative import declarative_base
 import datetime as dt
 from comm.logger import LOG
-from appflask import db,app
-Base = db.Model
+from appweb.appflask import dbs
+Base = dbs.Model
 #Column = db.Column
 #Integer = db.Integer
 

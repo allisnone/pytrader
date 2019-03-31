@@ -5,7 +5,7 @@ import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from trademodel.appmodels import *
-from appflask import db,app
+from appflask import apps
 """
 app = Flask(__name__)
 db_path = os.path.dirname(os.path.abspath(__file__))  
@@ -58,15 +58,16 @@ class Strategy(db.Model):
         return "<Strategy(name='%s', startdate='%s', lastupdate='%s', is_valid='%s', comments='%s')>" % (
                             self.name, self.startdate,self.lastupdate, self.is_valid,self.comments)
 """    
-@app.route('/strategy')
+@apps.route('/strategy')
 def users():
-  users = Strategy.query.all()
-  return "<br>".join(["{0}: {1}".format(user.name, user.comments) for user in users])
+    users = Strategy.query.all()
+    return "<br>".join(["{0}: {1}".format(user.name, user.comments) for user in users])
 # 查询
-@app.route('/strategy/<int:id>')
-def user(id):
-  user = Strategy.query.filter_by(id=id).one()
-  return "{0}: {1}".format(user.name, user.comments)
+@apps.route('/strategy/<int:id>')
+
+def user(strategy_id):
+    user = Strategy.query.filter_by(id=strategy_id).one()
+    return "{0}: {1}".format(user.name, user.comments)
 # 运行
 if __name__ == '__main__':
-  app.run('127.0.0.1', 5000)
+    apps.run('127.0.0.1', 5000)
