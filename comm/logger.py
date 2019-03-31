@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 #__Author__= allisnone #2019-02-16
 #https://www.cnblogs.com/yyds/p/6901864.html
+"""日志记录和日志触发email"""
 import logging
 import logging.handlers
 import datetime
 import base64
 import os
-from .enc import aes_cbc_decrypt
+from comm.enc import aes_cbc_decrypt
 
 class Logger(object):
     def __init__(self,logfile='all.log',errorfile='error.log',logname='mylogger',level=logging.DEBUG,tolist=['104450966@qq.com']):
@@ -53,6 +54,7 @@ class Logger(object):
         return
 
 dir_path = os.path.dirname(os.path.abspath(__file__))  
+dir_path = dir_path.replace('comm','logs')
 LOG = Logger(logfile=os.path.join(dir_path,'pytrader.log'),errorfile=os.path.join(dir_path,'error.log'),logname='mylogger',level=logging.DEBUG)
 """ 
 LOG = Logger(logfile='all.log',errorfile='error.log',logname='mylogger',level=logging.DEBUG)

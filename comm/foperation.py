@@ -1,11 +1,12 @@
 # -*- coding:utf-8 -*-
+"""文件操作"""
 import os
 import json
 import csv
 import configparser
 import sys
 #sys.path.append('..')
-#import mail.sendEmail as sm
+#import comm.sendEmail as sm
 class MyFile:
     # mainly use to read json, csv, ini, txt file
     def __init__(self,file_name='abc.txt',initial_data=True,encoding='utf-8'):
@@ -14,7 +15,7 @@ class MyFile:
         self.encoding = encoding
         self.datas = None
         if initial_data:
-           self.read_file()
+            self.read_file()
     
     def set_type(self,type):
         self.type = type

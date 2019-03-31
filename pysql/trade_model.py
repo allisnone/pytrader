@@ -13,7 +13,7 @@ from sqlalchemy import *#Column, String, create_engine,relationship
 from sqlalchemy.orm import sessionmaker,relationship,aliased
 from sqlalchemy.ext.declarative import declarative_base
 import datetime as dt
-from logs.mylogger import LOG
+from comm.logger import LOG
 
 # 创建对象的基类:
 Base = declarative_base()

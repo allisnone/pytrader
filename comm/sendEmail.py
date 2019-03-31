@@ -1,4 +1,5 @@
 # -*- coding:utf-8 -*-
+"""收发邮件"""
 import smtplib
 from email.mime import text
 from email.mime.text import MIMEText

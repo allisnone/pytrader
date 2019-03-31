@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 #__Author__= allisnone #2019-02-16
+"""
+加解密
+"""
 import os
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.backends import default_backend
