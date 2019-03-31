@@ -98,7 +98,7 @@ class Orders(Base):
     accountrade = relationship("Accountrade", back_populates='orders')
     deal = relationship("Deal", back_populates='orders')
     def __repr__(self):
-       return "<Orders(accid='%s', type='%s', direction='%s',code='%s',name='%s',price='%s',share='%s',status='%s',fee='%s',ordertime='%s')>" % (
+        return "<Orders(accid='%s', type='%s', direction='%s',code='%s',name='%s',price='%s',share='%s',status='%s',fee='%s',ordertime='%s')>" % (
                 self.accid, self.type, self.direction,self.code,self.name,self.price,self.share,self.status,self.ordertime)
 
 class Deal(Base):
@@ -129,22 +129,29 @@ class Capital(Base):
         max_drop = -0.12
         return  max_drop
     
-    def update_position(self):
+    def dynamic_position(self, max_drop, max_position=1, drop_unit=-0.05):
         #本金连续下跌时应快速减仓
-        max_position = 0.8
-        drop_unit = -0.05
-        pos_unit = drop_unit * 2
-        max_drop = self.get_max_drop()
+        #max_drop = self.get_max_drop()
         pos = max_position
-        n =9 
-        while n>0:
-            if max_drop < n * drop_unit:
-                break
-            else:
-                n = n - 1
-        if n >0:
-            pos = (1 + n * pos_unit)**(n+1)
-        return min(pos,max_position)
+        n = max_drop/drop_unit
+        #n = round(max_drop/drop_unit)
+        print('n=',n)
+        if n<=1:
+            pass
+        elif n <3:
+            pos = (1+ n * drop_unit*2) * max_position
+        else:
+            pos = (1+ n * drop_unit * 2) **2 * max_position
+        if pos <0.15:
+            pos = 0
+        return round(min(pos,max_position),2)
+    
+    def test_position(self):
+        max_drop=-0.02
+        for  i in range(40):
+            pos = self.dynamic_position(max_drop)
+            print( 'max_drop= {0}, pos={1}'.format(max_drop, pos))
+            max_drop = max_drop - 0.01
         
     
 class Potential(Base):
