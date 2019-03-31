@@ -237,7 +237,7 @@ class QQuotation:
         self.set_base_url(url='http://qt.gtimg.cn/q=s_')
         #url = 'http://qt.gtimg.cn/q=s_{}'.format(self.symbol)
         return self.get_quote_data()
-    
+"""    
 q = QQuotation(code='300017')
 data = q.get_quote_data_dict()
 print(data)
@@ -245,3 +245,4 @@ z = q.get_zijin()
 print(z)
 print(q.get_pankou())
 print(q.get_zhaiyao())
+"""
