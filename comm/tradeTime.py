@@ -3,14 +3,14 @@ import datetime,time
 #to get the latest trade day
 import sys
 sys.path.append('../')
-from comm import fileOperation
+from comm import foperation
 
 def is_trade_date(given_date_str=None):
     """
     :param given_date_str: str type, like '2017-10-01'
     :return: bool type 
     """
-    f = fileOperation.MyFile('../config/dates.json')
+    f = foperation.MyFile('../config/dates.json')
     EXCEPT_DATES = f.datas['except_dates']
     EXCEPT_DATES_A = []
     for date_str in EXCEPT_DATES:
@@ -66,11 +66,11 @@ def get_next_trade_date(given_datetime=None,date_format='%Y-%m-%d'):
     """
     this_day=datetime.datetime.now()
     if given_datetime!=None:
-        latest_datetime=given_latest_datetime
+        latest_datetime=given_datetime
         if isinstance(latest_datetime, str):
             latest_datetime_str=latest_datetime+' 10:00:00'
             try:
-                this_day=datetime.datetime.strptime(latest_datetime_str,time_format)
+                this_day=datetime.datetime.strptime(latest_datetime_str,date_format)
             except:
                 this_day=datetime.datetime.strptime(latest_datetime_str,date_format + ' %X')
         elif isinstance(latest_datetime, datetime.datetime):
