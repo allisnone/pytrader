@@ -19,14 +19,14 @@ from comm.logger import LOG
 #from sqlalchemy import *#Column, String, create_engine,relationship
 from sqlalchemy.orm import sessionmaker
 #from config import HOME_PATH
-from trademodel.appmodels import Strategy,Accountbase,Accountrade,Ordertype,Orders,Potential,Deal,Capital,dt,create_engine,Base
+from trademodel.appmodels import Strategy,Accountbase,Accountrade,Ordertype,Orders,Potential,Deal,Capital,dt,create_engine
 from comm.logger import LOG
 #from trademodel.model import Base
 import os
 #from appmodel import *
 # 创建对象的基类:
-#from sqlalchemy.ext.declarative import declarative_base
-#Base = declarative_base()
+from sqlalchemy.ext.declarative import declarative_base
+Base = declarative_base()
 
 class DBSession:
     def __init__(self,db='pytrader.db',echo=False):
