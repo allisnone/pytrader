@@ -14,7 +14,7 @@ from sqlalchemy.orm import sessionmaker,relationship,aliased
 from sqlalchemy.ext.declarative import declarative_base
 import datetime as dt
 from comm.logger import LOG
-from flaskapp import db
+from appflask import db
 
 class Strategy(db.Model):
     __tablename__ = 'strategy'
