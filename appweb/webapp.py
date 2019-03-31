@@ -63,8 +63,7 @@ def users():
     users = Strategy.query.all()
     return "<br>".join(["{0}: {1}".format(user.name, user.comments) for user in users])
 # 查询
-@apps.route('/strategy/<int:id>')
-
+@apps.route('/strategy/<int:strategy_id>')
 def user(strategy_id):
     user = Strategy.query.filter_by(id=strategy_id).one()
     return "{0}: {1}".format(user.name, user.comments)
