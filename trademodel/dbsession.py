@@ -20,7 +20,7 @@ from comm.logger import LOG
 from sqlalchemy.orm import sessionmaker
 #from config import HOME_PATH
 from trademodel.appmodels import Strategy,Accountbase,Accountrade,Ordertype,Orders,Potential,Deal,Capital,dt,create_engine
-from comm.logger import LOG
+from config.config import LOG,DB_PATH
 #from trademodel.model import Base
 import os
 #from appmodel import *
@@ -29,10 +29,7 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
 class DBSession:
-    def __init__(self,db='pytrader.db',echo=False):
-        db_path = os.path.dirname(os.path.abspath(__file__))  
-        #db_path = db_path.replace('trademodel','appweb')
-        db = os.path.join(db_path,db)
+    def __init__(self,db=DB_PATH,echo=False):
         self.engine = create_engine('sqlite:///' + db + '?check_same_thread=False', echo=echo)
         # 创建DBSession类型:
         Session = sessionmaker(bind=self.engine)
@@ -381,7 +378,7 @@ def initial_db_tables(dbs):
     dbs.delete_potential('300012')
     dbs.commit()
     dbs.close()
-"""    
+  
 #initial_db_tables(dbs)
 try:
     #initial_db(recreate=False)
@@ -392,7 +389,7 @@ except:
 initial_db(recreate=True)
 dbs = DBSession(echo=True)
 initial_db_tables(dbs)
-"""
+
 #startdate = dt.datetime.now()
 #import sys
 #sys.path.append("../logs")

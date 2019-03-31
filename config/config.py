@@ -1,9 +1,14 @@
 # -*- coding:utf-8 -*-
 import json,os
+from comm.logger import Logger
+import logging
 CONFIG = {}
-with open('config.json', 'r', encoding='utf-8') as f:
+HOME_PATH = os.path.dirname(os.path.abspath(__file__)).replace('config','')
+config_file = os.path.join(HOME_PATH,'config','config.json')
+with open(config_file, 'r', encoding='utf-8') as f:
             CONFIG = json.loads(f.read())
             f.close()
             
-
-HOME_PATH = os.path.dirname(os.path.abspath(__file__)).replace('config','')
+LOG_PATH = os.path.join(HOME_PATH,'logs')
+DB_PATH = os.path.join(HOME_PATH,'logs','pytrader.db')
+LOG = Logger(logfile=os.path.join(LOG_PATH,'pytrader.log'),errorfile=os.path.join(LOG_PATH,'error.log'),logname='mylogger',level=logging.DEBUG)

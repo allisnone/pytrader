@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #__Author__= allisnone #2019-03-31
-# flask_sqlalchemy.py
+
 import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
