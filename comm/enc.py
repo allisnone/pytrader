@@ -56,7 +56,7 @@ def aes_cbc_decrypt(content, key=b'MTIzNDU2Nzg5MCFAIyQlXg=='):
     real_content = unpadder.update(dec_content) + unpadder.finalize()
     return real_content
 
-#from app.libs.crypto_sign import *
+#from apappwebibs.crypto_sign import *
 def get_random_key_readable(key_size=256):
     '''
     get random key for symmetric encryption

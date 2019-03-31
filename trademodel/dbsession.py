@@ -9,18 +9,25 @@
 #https://www.jianshu.com/p/9771b0a3e589
 #data type
 #https://gitee.com/rambo_online/codes/he6xsd9rgyj4ut1l2vw7n73
+"""
 from sqlalchemy import *#Column, String, create_engine,relationship
 from sqlalchemy.orm import sessionmaker,relationship,aliased
 from sqlalchemy.ext.declarative import declarative_base
 import datetime as dt
 from comm.logger import LOG
+"""
+#from config import HOME_PATH
 from appmodels import *
+import os
 #from appmodel import *
 # 创建对象的基类:
-Base = declarative_base()
+#Base = declarative_base()
 
 class DBSession:
     def __init__(self,db='pytrader.db',echo=False):
+        db_path = os.path.dirname(os.path.abspath(__file__))  
+        #db_path = db_path.replace('model','appweb')
+        db = os.path.join(db_path,db)
         self.engine = create_engine('sqlite:///' + db + '?check_same_thread=False', echo=echo)
         # 创建DBSession类型:
         Session = sessionmaker(bind=self.engine)
@@ -29,7 +36,11 @@ class DBSession:
         self.session = Session()
     
     def commit(self):
-        self.session.commit()
+        try:
+            self.session.commit()
+        except Exception as e:
+            self.session.rollback()
+            LOG.logger.error('Fail to commit and rollback: {}'.format(e))
         return
     
     def close(self):
@@ -284,6 +295,22 @@ class DBSession:
             return 0
         return 1
 
+def initial_db(db='pytrader.db',recreate=False):
+    if recreate:
+        import os
+        try:
+            backup_db_name = db.replace('.','_bak.')
+            if os.path.exists(backup_db_name):
+                os.remove(backup_db_name)
+            os.renames(db, backup_db_name)
+        except Exception as e:
+            LOG.logger.error('initial_db: {}'.format(e))
+            #print('recreate ERROR',e)
+    engine = create_engine('sqlite:///' + db + '?check_same_thread=False', echo=False)
+    #engine = create_engine('mysql+mysqlconnector://root:password@localhost:3306/test')
+    #根据基类创建数据库表
+    Base.metadata.create_all(engine)
+    return
 
 def initial_db_tables(dbs):
     #初始化表格 Strategy
@@ -357,12 +384,11 @@ try:
 except:
     pass
 
-#initial_db(recreate=True)
+initial_db(recreate=True)
 dbs = DBSession(echo=True)
 initial_db_tables(dbs)
-startdate = dt.datetime.now()
+#startdate = dt.datetime.now()
 #import sys
 #sys.path.append("../logs")
-
 #LOG.logger.info('分众传媒')
 #initial_db_tables(dbs)
